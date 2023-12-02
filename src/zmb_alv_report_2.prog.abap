@@ -22,6 +22,8 @@ DATA: it_mara       TYPE TABLE OF st_mara,
       wa_mara       TYPE st_mara,
       it_design_alv TYPE slis_t_fieldcat_alv,
       wa_design_alv TYPE slis_fieldcat_alv ,
+      it_sort_fields type slis_t_sortinfo_alv ,
+      wa_sort_fields type slis_sortinfo_alv ,
       wa_layout_alv type slis_layout_alv .
 
 
@@ -30,7 +32,7 @@ SELECT matnr
        mtart
        ersda
        ntgew
-  FROM mara INTO TABLE it_mara .
+  FROM mara INTO TABLE it_mara UP TO 20 ROWS .
 
 PERFORM build_fieldcat USING '1' '1' 'matnr' 'material Number' '8'.
 PERFORM build_fieldcat USING '1' '2' 'mtart' 'material Type' '8'.
@@ -39,6 +41,12 @@ PERFORM build_fieldcat USING '1' '4' 'ntgew' 'Weigth Net' '8'.
 
 wa_layout_alv-zebra = 'X' .
 
+
+wa_sort_fields-fieldname = 'matnr' .
+wa_sort_fields-up = 'X' .
+
+APPEND wa_sort_fields to it_sort_fields .
+clear wa_sort_fields .
 CALL FUNCTION 'REUSE_ALV_GRID_DISPLAY'
  EXPORTING
 *   I_INTERFACE_CHECK                 = ' '
@@ -58,7 +66,7 @@ CALL FUNCTION 'REUSE_ALV_GRID_DISPLAY'
    IT_FIELDCAT                       = it_design_alv
 *   IT_EXCLUDING                      =
 *   IT_SPECIAL_GROUPS                 =
-*   IT_SORT                           =
+   IT_SORT                           = it_sort_fields
 *   IT_FILTER                         =
 *   IS_SEL_HIDE                       =
 *   I_DEFAULT                         = 'X'
