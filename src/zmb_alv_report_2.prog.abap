@@ -79,8 +79,10 @@ FORM MARD_DETAILS USING
                          p_selfdetails TYPE slis_selfield ."selection field detail
   DATA:
           it_mard TYPE STANDARD TABLE OF mard .
+
+  READ TABLE it_mara into data(w_mara) index p_selfdetails-tabindex .
   SELECT *
-         FROM mard INTO  TABLE it_mard WHERE matnr = p_selfdetails-value .
+         FROM mard INTO  TABLE it_mard WHERE matnr = w_mara-matnr .
 
   CALL FUNCTION 'REUSE_ALV_GRID_DISPLAY'
     EXPORTING
